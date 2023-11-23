@@ -1,16 +1,34 @@
-import './polyfills';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
+import 'zone.js';
+import { DebounceClickDirective } from './debounce-click.directive';
 
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [DebounceClickDirective],
+  template: `
+    <h1>Creating a Custom Debounce Click Directive in Angular</h1>
 
-import { AppModule } from './app/app.module';
+    <a href="https://coryrylan.com/blog/creating-a-custom-debounce-click-directive-in-angular">Tutorial at coryrylan.com</a>
 
-platformBrowserDynamic().bootstrapModule(AppModule).then(ref => {
-  // Ensure Angular destroys itself on hot reloads.
-  if (window['ngRef']) {
-    window['ngRef'].destroy();
+    {{count}}
+
+    <br />
+
+    <button (click)="log()">Regular Click</button>
+    &nbsp;
+    <button appDebounceClick (debounceClick)="log()" [debounceTime]="700">Debounced Click</button>
+
+  `,
+})
+export class App {
+  count = 0;
+
+  log() {
+    this.count++;
+    console.log('Clicked!');
   }
-  window['ngRef'] = ref;
+}
 
-  // Otherise, log the boot error
-}).catch(err => console.error(err));
+bootstrapApplication(App);
